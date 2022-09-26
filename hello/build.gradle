@@ -1,0 +1,30 @@
+import org.gradle.internal.jvm.Jvm
+
+plugins {
+    id 'cpp-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+library {
+
+    // linkage = [Linkage.STATIC, Linkage.SHARED]
+
+    targetMachines = [
+            machines.windows.x86_64,
+            machines.host()
+    ]
+
+    dependencies {
+    }
+}
+
+def jvmHome = Jvm.current().javaHome
+// 添加 jdk includes 路径
+tasks.withType(CppCompile) {
+    includes(["${jvmHome}/include", "${jvmHome}/include/win32"])
+    // JNI 要求 dll 支持多线程，所以 msvc 编译器也要支持多线程
+    compilerArgs.add("/MD")
+}

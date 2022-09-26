@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+mainClassName = 'HelloWorld'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+application {
+    applicationDefaultJvmArgs = [
+            "-Djava.library.path=" + file("hello/build/lib/main/release").absolutePath]
+}
+
+//classes.dependsOn 'helloSharedLibrary'
+
+// 将 javac -h 编译得到的头文件放到 jni 子项目中去
+compileJava {
+    options.compilerArgs += ["-h", file("hello/src/main/headers")]
+}
